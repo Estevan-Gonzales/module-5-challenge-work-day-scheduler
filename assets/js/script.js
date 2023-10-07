@@ -1,13 +1,28 @@
-//Set current date
-//var today = dayjs().format("dddd, MMMM DD, YYYY");
-var today = dayjs();
+
+var today = dayjs().format("dddd, MMMM DD, YYYY")
 var now = dayjs().format("HH:mm:ss");
-timeRelative = []
-hours = '00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23'.split(',');
+console.log(now);
+console.log(today);
+var currentTimeEl = document.getElementById('currentDay');
+currentTimeEl.textContent = today;
+
+var timeRelative = []
+var hours = '00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23'.split(',');
+
+var hoursForLabel = [];
+hoursForLabel.push("12AM");
+for (i=1; i<12; i++) {
+  hoursForLabel.push(i + "AM");
+}
+hoursForLabel.push("12PM");
+for (i=1; i<13; i++) {
+  hoursForLabel.push(i + "PM");
+}
+
 for (var i = 0; i < hours.length; i++) {
   hourToAdd = hours[i] + ":00:00";
   if (dayjs().format("HH:00:00") == hourToAdd) {
-    timeRelative.push("now");
+    timeRelative.push("present");
   } else if (hourToAdd < now) {
     timeRelative.push("past");
   } else {
@@ -17,29 +32,52 @@ for (var i = 0; i < hours.length; i++) {
 
 var mainViewEl = document.getElementById("main-view");
 
+for (i = 9; i < 18; i++) {
+  var relativeEl = document.createElement('div');
+  var relativeElInnerDiv = document.createElement('div');
+  var relativeElTextArea = document.createElement('textarea');
+  var relativeElButton = document.createElement('button');
+  var relativeElInnerI = document.createElement('i');
 
-
-for (i = 0; i < timeRelative.length; i++) {
   if (timeRelative[i] == "past") {
-    var pastEl = document.createElement('div');
-    var pastElInnerDiv = document.createElement('div');
-    pastEl.setAttribute('class', 'row time-block present');
-    pastElInnerDiv.setAttribute('class', "col-2 col-md-1 hour text-center py-3");
-
-    pastEl.append(pastElInnerDiv);
-
-    mainViewEl.append(pastEl);
+    relativeEl.setAttribute('class', 'row time-block past');
+  } else if(timeRelative[i] == "present") {
+    relativeEl.setAttribute('class', 'row time-block present');
+  } else {
+    relativeEl.setAttribute('class', 'row time-block future');
   }
+
+  relativeEl.setAttribute('id', 'time-block-' + i)
+  relativeElInnerDiv.setAttribute('class', "col-2 col-md-1 hour text-center py-3");
+  relativeElInnerDiv.textContent = hoursForLabel[i]
+  relativeElTextArea.setAttribute('class', "col-8 col-md-10 description");
+  relativeElTextArea.setAttribute('rows', '3');
+  relativeElButton.setAttribute('class', "btn saveBtn col-2 col-md-1");
+  relativeElButton.setAttribute('id', 'time-button-' + i)
+  relativeElButton.setAttribute('aria-label', 'save');
+  relativeElInnerI.setAttribute('class', 'fas fa-save');
+  relativeElInnerI.setAttribute('area-hidden', "true");
+
+  relativeEl.append(relativeElInnerDiv);
+  mainViewEl.append(relativeEl);
+  relativeEl.append(relativeElInnerDiv);
+  relativeEl.append(relativeElTextArea);
+  relativeEl.append(relativeElButton);
+  relativeElButton.append(relativeElInnerI);
+
+  relativeElButton.addEventListener('click', saveEvent);
+
+}
+
+function saveEvent(event) {
+  console.log(event.srcElement.parentElement.id.split('-')[2]);
+  var parentElNumber = event.srcElement.parentElement.id.split('-')[2];
+  var textArea = document.getElementById('time-button-' + parentElNumber);
+  console.log()
+  console.log(textArea.value);
 }
 
 
-
-
-
-console.log(now);
-console.log(today);
-var currentTimeEl = document.getElementById('currentDay');
-currentTimeEl.textContent = today;
 
 
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
