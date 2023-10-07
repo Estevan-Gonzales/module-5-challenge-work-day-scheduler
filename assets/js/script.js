@@ -51,6 +51,8 @@ for (i = 9; i < 18; i++) {
   relativeElInnerDiv.setAttribute('class', "col-2 col-md-1 hour text-center py-3");
   relativeElInnerDiv.textContent = hoursForLabel[i]
   relativeElTextArea.setAttribute('class', "col-8 col-md-10 description");
+  relativeElTextArea.setAttribute('id', "scheduler-text-" + i);
+  relativeElTextArea.textContent = localStorage.getItem(i);
   relativeElTextArea.setAttribute('rows', '3');
   relativeElButton.setAttribute('class', "btn saveBtn col-2 col-md-1");
   relativeElButton.setAttribute('id', 'time-button-' + i)
@@ -70,11 +72,11 @@ for (i = 9; i < 18; i++) {
 }
 
 function saveEvent(event) {
-  console.log(event.srcElement.parentElement.id.split('-')[2]);
+  console.log("event.srcElement.parentElement.id.split('-')[2] ", event.srcElement.parentElement.id.split('-')[2]);
   var parentElNumber = event.srcElement.parentElement.id.split('-')[2];
-  var textArea = document.getElementById('time-button-' + parentElNumber);
-  console.log()
+  var textArea = document.getElementById('scheduler-text-' + parentElNumber);
   console.log(textArea.value);
+  localStorage.setItem(parentElNumber, textArea.value);
 }
 
 
